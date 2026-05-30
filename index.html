@@ -16,6 +16,7 @@
       --primary: #6c63ff;
       --primary-dark: #3f3d9c;
       --danger: #e53935;
+      --gold: #f9a825;
     }
     html { height: 100%; }
     body {
@@ -26,7 +27,8 @@
       overflow-x: hidden;
     }
     body::before, body::after {
-      content: ''; position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
+      content: ''; position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 0;
     }
     body::before {
       width: 340px; height: 340px;
@@ -42,8 +44,8 @@
     /* ── Loading ── */
     #loading {
       position: fixed; inset: 0; z-index: 99;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 16px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 14px;
     }
     .spinner {
       width: 44px; height: 44px;
@@ -53,7 +55,7 @@
       animation: spin .8s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
-    #loading p { color: rgba(255,255,255,.5); font-size: .88rem; }
+    #loading p { color: rgba(255,255,255,.45); font-size: .85rem; }
 
     /* ── Screens ── */
     .screen {
@@ -61,17 +63,17 @@
       display: flex; flex-direction: column; align-items: center;
       padding: 24px 20px 40px;
       overflow-y: auto; -webkit-overflow-scrolling: touch;
-      transition: opacity .32s ease, transform .32s ease;
+      transition: opacity .3s ease, transform .3s ease;
     }
     .screen.center { justify-content: center; }
-    .screen.is-hidden  { opacity: 0; pointer-events: none; transform: translateY(28px); }
-    .screen.is-leaving { opacity: 0; pointer-events: none; transform: translateY(-28px); }
+    .screen.is-hidden  { opacity: 0; pointer-events: none; transform: translateY(26px); }
+    .screen.is-leaving { opacity: 0; pointer-events: none; transform: translateY(-26px); }
 
     /* ── Brand ── */
     .brand { text-align: center; margin-bottom: 26px; flex-shrink: 0; }
     .brand-icon { font-size: 3rem; display: block; margin-bottom: 6px; }
-    .brand h1 { color: #fff; font-size: 1.55rem; font-weight: 800; letter-spacing: .4px; }
-    .brand p  { color: rgba(255,255,255,.5); font-size: .85rem; margin-top: 4px; }
+    .brand h1   { color: #fff; font-size: 1.55rem; font-weight: 800; letter-spacing: .4px; }
+    .brand p    { color: rgba(255,255,255,.5); font-size: .84rem; margin-top: 4px; }
 
     /* ── Card ── */
     .card {
@@ -130,6 +132,8 @@
       background: none; border: none; cursor: pointer;
       font-size: 1.05rem; color: #aaa; padding: 4px; line-height: 1;
     }
+
+    /* ── Primary button ── */
     .btn-primary {
       width: 100%; padding: 15px; border: none; border-radius: 13px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
@@ -139,31 +143,30 @@
       transition: transform .1s, opacity .1s;
       display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-    .btn-primary:active { transform: scale(.97); opacity: .9; }
+    .btn-primary:active   { transform: scale(.97); opacity: .9; }
     .btn-primary:disabled { opacity: .55; cursor: default; }
+
     .btn-spinner {
       width: 18px; height: 18px;
       border: 2.5px solid rgba(255,255,255,.35);
       border-top-color: #fff; border-radius: 50%;
-      animation: spin .7s linear infinite;
-      display: none;
+      animation: spin .7s linear infinite; display: none;
     }
     .btn-primary.loading .btn-spinner { display: block; }
     .btn-primary.loading .btn-label  { display: none; }
 
-    /* ── How to Play screen ── */
+    /* ── How to Play ── */
     #screen-htp { padding-top: 36px; justify-content: flex-start; }
     .htp-header { text-align: center; margin-bottom: 20px; }
-    .htp-header .greet { color: rgba(255,255,255,.65); font-size: .88rem; margin-bottom: 5px; }
+    .htp-header .greet  { color: rgba(255,255,255,.65); font-size: .88rem; margin-bottom: 5px; }
     .htp-header .greet strong { color: #fff; }
     .htp-header h2 { color: #fff; font-size: 1.45rem; font-weight: 800; }
     .htp-header p  { color: rgba(255,255,255,.5); font-size: .82rem; margin-top: 4px; }
 
     .steps { display: flex; flex-direction: column; gap: 11px; margin-bottom: 20px; }
     .step {
-      display: flex; align-items: flex-start; gap: 13px;
-      padding: 13px 14px; background: #f7f7ff;
-      border-radius: 14px; border-left: 3.5px solid var(--primary);
+      display: flex; align-items: flex-start; gap: 13px; padding: 13px 14px;
+      background: #f7f7ff; border-radius: 14px; border-left: 3.5px solid var(--primary);
       opacity: 0; transform: translateX(-14px);
     }
     .step.visible { animation: stepIn .38s ease forwards; }
@@ -187,10 +190,8 @@
     }
     .btn-play:active { transform: scale(.97); }
 
-    /* ── Game screen ── */
-    #screen-game { padding: 0 0 32px; justify-content: flex-start; }
-
-    .game-topbar {
+    /* ── Topbar (shared by game + ranking) ── */
+    .topbar {
       width: 100%; max-width: 420px;
       display: flex; align-items: center; justify-content: space-between;
       padding: 18px 20px 14px; flex-shrink: 0;
@@ -217,11 +218,12 @@
       display: flex; align-items: center; justify-content: center;
       transition: background .18s;
     }
-    .icon-btn:active { background: rgba(255,255,255,.22); }
+    .icon-btn:active { background: rgba(255,255,255,.25); }
 
-    #screen-game .card {
-      max-width: 420px; margin: 0 20px; width: calc(100% - 40px);
-    }
+    /* ── Game screen ── */
+    #screen-game { padding: 0 0 32px; justify-content: flex-start; }
+    #screen-game .card { max-width: 420px; margin: 0 20px; width: calc(100% - 40px); }
+
     .range-hint { text-align: center; color: #999; font-size: .88rem; margin-bottom: 20px; }
     .range-hint strong { color: #444; }
 
@@ -284,6 +286,69 @@
     }
     .btn-newgame:active { background: #f5f5f5; }
 
+    /* ── Ranking screen ── */
+    #screen-ranking { padding: 0 0 32px; justify-content: flex-start; }
+    #screen-ranking .card { max-width: 420px; margin: 0 20px; width: calc(100% - 40px); }
+
+    .ranking-title {
+      color: #fff; font-size: 1.1rem; font-weight: 800;
+      display: flex; align-items: center; gap: 8px;
+    }
+
+    .ranking-loading {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; padding: 32px 0; color: #aaa; font-size: .9rem;
+    }
+
+    .ranking-empty {
+      text-align: center; padding: 32px 0;
+      color: #bbb; font-size: .9rem; line-height: 1.6;
+    }
+    .ranking-empty span { font-size: 2rem; display: block; margin-bottom: 8px; }
+
+    .ranking-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .ranking-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 14px; border-radius: 14px; background: #f7f7ff;
+      transition: background .2s;
+    }
+    .ranking-row.is-me { background: #eeeeff; border: 1.5px solid rgba(108,99,255,.3); }
+    .ranking-row.rank-1 { background: #fffbeb; border: 1.5px solid rgba(249,168,37,.35); }
+    .ranking-row.rank-2 { background: #f8f8f8; border: 1.5px solid rgba(150,150,150,.3); }
+    .ranking-row.rank-3 { background: #fff5ee; border: 1.5px solid rgba(205,127,50,.3); }
+
+    .rank-medal { font-size: 1.3rem; width: 28px; text-align: center; flex-shrink: 0; }
+    .rank-number {
+      width: 28px; text-align: center; flex-shrink: 0;
+      font-size: .85rem; font-weight: 700; color: #bbb;
+    }
+
+    .rank-info { flex: 1; min-width: 0; }
+    .rank-name {
+      font-size: .92rem; font-weight: 700; color: #1a1a2e;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .rank-name .you-tag {
+      font-size: .7rem; font-weight: 700; color: var(--primary);
+      background: rgba(108,99,255,.12); border-radius: 4px;
+      padding: 1px 5px; margin-left: 5px; vertical-align: middle;
+    }
+    .rank-sub { font-size: .75rem; color: #aaa; margin-top: 1px; }
+
+    .rank-score {
+      text-align: right; flex-shrink: 0;
+    }
+    .rank-score .score-num {
+      font-size: 1.1rem; font-weight: 800; color: #1a1a2e;
+    }
+    .rank-score .score-label { font-size: .7rem; color: #aaa; }
+
+    .ranking-footer {
+      margin-top: 16px; text-align: center;
+      font-size: .75rem; color: #ccc;
+    }
+
     /* ── Modal ── */
     .modal-backdrop {
       position: fixed; inset: 0; z-index: 50;
@@ -313,6 +378,23 @@
     .btn-modal-close:active { background: #e4e4ee; }
     .modal .steps { margin-bottom: 0; }
     .modal .step  { animation: none !important; opacity: 1; transform: none; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e; color: #fff;
+      padding: 12px 22px; border-radius: 50px;
+      font-size: .9rem; font-weight: 600;
+      box-shadow: 0 8px 28px rgba(0,0,0,.4);
+      z-index: 200; white-space: nowrap;
+      transition: transform .32s cubic-bezier(.34,1.2,.64,1), opacity .32s;
+      opacity: 0; pointer-events: none;
+    }
+    #toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
   </style>
 </head>
 <body>
@@ -323,7 +405,10 @@
   <p>Carregando…</p>
 </div>
 
-<!-- ═══ AUTH ═══════════════════════════════════════════════ -->
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- ═══ AUTH ════════════════════════════════════════════════ -->
 <div id="screen-auth" class="screen center is-hidden">
   <div class="brand">
     <span class="brand-icon">🔢</span>
@@ -397,14 +482,13 @@
 </div>
 
 
-<!-- ═══ HOW TO PLAY ════════════════════════════════════════ -->
+<!-- ═══ HOW TO PLAY ══════════════════════════════════════════ -->
 <div id="screen-htp" class="screen is-hidden">
   <div class="htp-header">
     <p class="greet">Olá, <strong id="htp-name"></strong>! 👋</p>
     <h2>Como Jogar</h2>
     <p>Leia as regras antes de começar</p>
   </div>
-
   <div class="card">
     <div class="steps" id="htp-steps">
       <div class="step">
@@ -450,14 +534,15 @@
 
 <!-- ═══ GAME ════════════════════════════════════════════════ -->
 <div id="screen-game" class="screen is-hidden">
-  <div class="game-topbar">
+  <div class="topbar">
     <div class="user-chip">
       <div class="avatar" id="g-avatar"></div>
       <span class="uname" id="g-uname"></span>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" id="btn-info"   title="Como Jogar">❓</button>
-      <button class="icon-btn" id="btn-logout" title="Sair">🚪</button>
+      <button class="icon-btn" id="btn-ranking" title="Ranking">🏆</button>
+      <button class="icon-btn" id="btn-info"    title="Como Jogar">❓</button>
+      <button class="icon-btn" id="btn-logout"  title="Sair">🚪</button>
     </div>
   </div>
 
@@ -488,7 +573,27 @@
 </div>
 
 
-<!-- ═══ MODAL HOW TO PLAY ═══════════════════════════════════ -->
+<!-- ═══ RANKING ══════════════════════════════════════════════ -->
+<div id="screen-ranking" class="screen is-hidden">
+  <div class="topbar">
+    <button class="icon-btn" id="btn-back" title="Voltar">←</button>
+    <span class="ranking-title">🏆 Ranking</span>
+    <div style="width:38px"></div><!-- spacer -->
+  </div>
+
+  <div class="card">
+    <div id="ranking-content">
+      <div class="ranking-loading">
+        <div class="spinner" style="width:24px;height:24px;border-width:3px"></div>
+        <span>Carregando…</span>
+      </div>
+    </div>
+    <p class="ranking-footer">Atualizado em tempo real · Top 10 por melhor resultado</p>
+  </div>
+</div>
+
+
+<!-- ═══ MODAL HOW TO PLAY ════════════════════════════════════ -->
 <div id="modal-htp" class="modal-backdrop">
   <div class="modal">
     <div class="modal-head">
@@ -507,39 +612,42 @@
 
 
 <script type="module">
-import { initializeApp }                              from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { getAnalytics }                               from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js';
+import { initializeApp }     from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAnalytics }      from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js';
 import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  onAuthStateChanged,
-  signOut,
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  updateProfile, onAuthStateChanged, signOut,
 } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import {
+  getFirestore, doc, setDoc, getDoc,
+  collection, query, orderBy, limit, onSnapshot,
+  increment, serverTimestamp,
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js';
 
-/* ── Firebase init ────────────────────────────────────── */
+/* ── Firebase ─────────────────────────────────────────── */
 const app = initializeApp({
   apiKey:            "AIzaSyAjj2maIrr0n-UeLoj2P0wiw7OIaTWPcOA",
   authDomain:        "advinhe-o-numero.firebaseapp.com",
   projectId:         "advinhe-o-numero",
   storageBucket:     "advinhe-o-numero.firebasestorage.app",
   messagingSenderId: "1091266744369",
-  appId:             "1:1091266744369:web:7ea88855c327fbc49c0510",
+  appId:             "1:1091266744379:web:7ea88855c327fbc49c0510",
   measurementId:     "G-NR4KB2PYXC",
 });
 getAnalytics(app);
 const auth = getAuth(app);
+const db   = getFirestore(app);
 
 /* ── Screen management ────────────────────────────────── */
 let currentScreen = null;
 
 function goTo(id, instant = false) {
   const next = document.getElementById(id);
+  if (currentScreen === next) return;
   if (currentScreen && !instant) {
     const prev = currentScreen;
     prev.classList.add('is-leaving');
-    setTimeout(() => prev.classList.add('is-hidden'), 320);
+    setTimeout(() => prev.classList.add('is-hidden'), 300);
   } else if (currentScreen) {
     currentScreen.classList.add('is-hidden');
   }
@@ -547,23 +655,39 @@ function goTo(id, instant = false) {
   currentScreen = next;
 }
 
+/* ── Toast ────────────────────────────────────────────── */
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
 /* ── Auth state ───────────────────────────────────────── */
-let manualAuthPending = false; // true while login/register request is in-flight
+let manualAuthPending = false;
 
 onAuthStateChanged(auth, user => {
   document.getElementById('loading').style.display = 'none';
-
-  if (manualAuthPending) return; // manual handler will drive navigation
+  if (manualAuthPending) return;
 
   if (user) {
     const name = user.displayName || user.email.split('@')[0];
     loadGame(name);
     goTo('screen-game', true);
   } else {
-    currentScreen = document.getElementById('screen-auth');
-    document.getElementById('screen-auth').classList.remove('is-hidden');
+    resetAuthForms();
+    goTo('screen-auth', !currentScreen);
   }
 });
+
+function resetAuthForms() {
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pw').value    = '';
+  document.getElementById('login-alert').classList.remove('show');
+  document.getElementById('reg-alert').classList.remove('show');
+}
 
 /* ── Tabs ─────────────────────────────────────────────── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -572,9 +696,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     document.querySelectorAll('.tab-panel').forEach(p =>
       p.classList.toggle('active', p.id === 'panel-' + btn.dataset.tab)
     );
-    ['login-alert', 'reg-alert'].forEach(id =>
-      document.getElementById(id).classList.remove('show')
-    );
+    document.getElementById('login-alert').classList.remove('show');
+    document.getElementById('reg-alert').classList.remove('show');
   });
 });
 
@@ -587,16 +710,16 @@ document.querySelectorAll('.pw-eye').forEach(btn => {
   });
 });
 
-/* ── Firebase error messages ──────────────────────────── */
+/* ── Firebase error map ───────────────────────────────── */
 function fbError(code) {
   const map = {
-    'auth/user-not-found':       'E-mail não encontrado.',
-    'auth/wrong-password':       'Senha incorreta.',
-    'auth/invalid-credential':   'E-mail ou senha incorretos.',
-    'auth/email-already-in-use': 'E-mail já está em uso.',
-    'auth/weak-password':        'Senha muito fraca (mínimo 6 caracteres).',
-    'auth/invalid-email':        'E-mail inválido.',
-    'auth/too-many-requests':    'Muitas tentativas. Tente novamente mais tarde.',
+    'auth/user-not-found':         'E-mail não encontrado.',
+    'auth/wrong-password':         'Senha incorreta.',
+    'auth/invalid-credential':     'E-mail ou senha incorretos.',
+    'auth/email-already-in-use':   'E-mail já está em uso.',
+    'auth/weak-password':          'Senha muito fraca (mínimo 6 caracteres).',
+    'auth/invalid-email':          'E-mail inválido.',
+    'auth/too-many-requests':      'Muitas tentativas. Tente mais tarde.',
     'auth/network-request-failed': 'Sem conexão. Verifique a internet.',
   };
   return map[code] || 'Erro inesperado. Tente novamente.';
@@ -604,22 +727,21 @@ function fbError(code) {
 
 function showAlert(id, msg) {
   const el = document.getElementById(id);
-  el.textContent = msg;
-  el.classList.add('show');
+  el.textContent = msg; el.classList.add('show');
 }
 
 function setLoading(btn, on) {
-  btn.disabled = on;
-  btn.classList.toggle('loading', on);
+  btn.disabled = on; btn.classList.toggle('loading', on);
 }
 
-/* ── After auth: show How to Play ─────────────────────── */
-function afterAuth(displayName) {
-  document.getElementById('htp-name').textContent = displayName;
+/* ── After auth ───────────────────────────────────────── */
+function afterAuth(name) {
+  document.getElementById('htp-name').textContent = name;
   goTo('screen-htp');
   setTimeout(() => {
     document.querySelectorAll('#htp-steps .step').forEach(s => s.classList.add('visible'));
   }, 60);
+  setTimeout(() => { manualAuthPending = false; }, 600);
 }
 
 /* ── Login ────────────────────────────────────────────── */
@@ -627,7 +749,6 @@ const btnLogin = document.getElementById('btn-login');
 btnLogin.addEventListener('click', async () => {
   const email = document.getElementById('login-email').value.trim();
   const pw    = document.getElementById('login-pw').value;
-
   document.getElementById('login-alert').classList.remove('show');
   if (!email || !pw) { showAlert('login-alert', 'Preencha todos os campos.'); return; }
 
@@ -645,7 +766,7 @@ btnLogin.addEventListener('click', async () => {
   }
 });
 
-['login-email', 'login-pw'].forEach(id =>
+['login-email','login-pw'].forEach(id =>
   document.getElementById(id).addEventListener('keydown', e => {
     if (e.key === 'Enter') btnLogin.click();
   })
@@ -658,7 +779,6 @@ btnRegister.addEventListener('click', async () => {
   const email = document.getElementById('reg-email').value.trim();
   const pw    = document.getElementById('reg-pw').value;
   const pw2   = document.getElementById('reg-pw2').value;
-
   document.getElementById('reg-alert').classList.remove('show');
 
   if (!name || !email || !pw || !pw2) { showAlert('reg-alert', 'Preencha todos os campos.'); return; }
@@ -681,23 +801,17 @@ btnRegister.addEventListener('click', async () => {
 
 /* ── How to Play → Game ───────────────────────────────── */
 document.getElementById('btn-play').addEventListener('click', () => {
-  loadGame(auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || '?');
+  const u = auth.currentUser;
+  const name = u ? (u.displayName || u.email.split('@')[0]) : '?';
+  loadGame(name);
   goTo('screen-game');
 });
 
 /* ── Logout ───────────────────────────────────────────── */
 document.getElementById('btn-logout').addEventListener('click', async () => {
-  manualAuthPending = false;
+  stopRanking();
   await signOut(auth);
-  document.getElementById('login-email').value = '';
-  document.getElementById('login-pw').value    = '';
-  document.getElementById('login-alert').classList.remove('show');
-  goTo('screen-auth');
-  // restore auth screen visibility (onAuthStateChanged won't fire here since we navigated manually)
-  setTimeout(() => {
-    document.getElementById('screen-auth').classList.remove('is-hidden');
-    currentScreen = document.getElementById('screen-auth');
-  }, 20);
+  // onAuthStateChanged fires with null → navigates to auth
 });
 
 /* ── Game ─────────────────────────────────────────────── */
@@ -762,6 +876,7 @@ guessBtn.addEventListener('click', () => {
     winBanner.classList.add('show');
     guessBtn.disabled = true;
     won = true;
+    saveScore(attempts); // async, fire-and-forget
   } else if (current < secret) {
     feedbackEl.className   = 'feedback higher';
     feedbackEl.textContent = '📈 O número é MAIOR!';
@@ -773,7 +888,98 @@ guessBtn.addEventListener('click', () => {
 
 document.getElementById('btn-newgame').addEventListener('click', resetGame);
 
-/* ── Modal ────────────────────────────────────────────── */
+/* ── Score saving ─────────────────────────────────────── */
+async function saveScore(attempts) {
+  const user = auth.currentUser;
+  if (!user) return;
+
+  const ref  = doc(db, 'rankings', user.uid);
+  const snap = await getDoc(ref);
+  const data = snap.exists() ? snap.data() : null;
+  const isPersonalBest = !data || attempts < data.bestScore;
+
+  await setDoc(ref, {
+    displayName: user.displayName || user.email.split('@')[0],
+    bestScore:   isPersonalBest ? attempts : (data?.bestScore ?? attempts),
+    wins:        increment(1),
+    lastUpdated: serverTimestamp(),
+  }, { merge: true });
+
+  if (isPersonalBest) {
+    showToast(`🎯 Novo recorde pessoal: ${attempts} tentativa${attempts !== 1 ? 's' : ''}!`);
+  }
+}
+
+/* ── Ranking ──────────────────────────────────────────── */
+let rankingUnsub = null;
+const medals = ['🥇', '🥈', '🥉'];
+
+function openRanking() {
+  goTo('screen-ranking');
+  const q = query(collection(db, 'rankings'), orderBy('bestScore', 'asc'), limit(10));
+  rankingUnsub = onSnapshot(q, snap => renderRanking(snap.docs), () => {
+    document.getElementById('ranking-content').innerHTML =
+      `<div class="ranking-empty"><span>⚠️</span>Erro ao carregar.<br>Verifique as regras do Firestore.</div>`;
+  });
+}
+
+function stopRanking() {
+  if (rankingUnsub) { rankingUnsub(); rankingUnsub = null; }
+}
+
+function renderRanking(docs) {
+  const uid = auth.currentUser?.uid;
+  const content = document.getElementById('ranking-content');
+
+  if (docs.length === 0) {
+    content.innerHTML =
+      `<div class="ranking-empty"><span>🎮</span>Nenhuma partida ainda.<br>Seja o primeiro do ranking!</div>`;
+    return;
+  }
+
+  const rows = docs.map((d, i) => {
+    const data  = d.data();
+    const isMe  = d.id === uid;
+    const rank  = i + 1;
+    const medal = medals[i] ?? null;
+    const wins  = data.wins ?? 0;
+
+    return `
+      <div class="ranking-row ${medal ? 'rank-' + rank : ''} ${isMe ? 'is-me' : ''}">
+        ${medal
+          ? `<span class="rank-medal">${medal}</span>`
+          : `<span class="rank-number">${rank}</span>`
+        }
+        <div class="rank-info">
+          <div class="rank-name">
+            ${esc(data.displayName)}
+            ${isMe ? '<span class="you-tag">você</span>' : ''}
+          </div>
+          <div class="rank-sub">${wins} vitória${wins !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="rank-score">
+          <div class="score-num">${data.bestScore}</div>
+          <div class="score-label">tent.</div>
+        </div>
+      </div>`;
+  }).join('');
+
+  content.innerHTML = `<div class="ranking-list">${rows}</div>`;
+}
+
+function esc(str) {
+  return String(str)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+document.getElementById('btn-ranking').addEventListener('click', openRanking);
+document.getElementById('btn-back').addEventListener('click', () => {
+  stopRanking();
+  goTo('screen-game');
+});
+
+/* ── Info modal ───────────────────────────────────────── */
 const modalHtp = document.getElementById('modal-htp');
 document.getElementById('btn-info').addEventListener('click', () => modalHtp.classList.add('open'));
 document.getElementById('btn-modal-close').addEventListener('click', () => modalHtp.classList.remove('open'));
