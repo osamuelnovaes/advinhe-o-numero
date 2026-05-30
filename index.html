@@ -9,40 +9,24 @@
   <title>Adivinhe o Número</title>
   <style>
     *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+      box-sizing: border-box; margin: 0; padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
-
     :root {
       --primary: #6c63ff;
       --primary-dark: #3f3d9c;
-      --success: #43a047;
       --danger: #e53935;
-      --bg1: #1a1a2e;
-      --bg2: #16213e;
-      --bg3: #0f3460;
     }
-
     html { height: 100%; }
-
     body {
       min-height: 100dvh;
       font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-      background: linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 50%, var(--bg3) 100%);
+      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
       background-attachment: fixed;
       overflow-x: hidden;
     }
-
-    /* Decorative blobs */
-    body::before,
-    body::after {
-      content: '';
-      position: fixed;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
+    body::before, body::after {
+      content: ''; position: fixed; border-radius: 50%; pointer-events: none; z-index: 0;
     }
     body::before {
       width: 340px; height: 340px;
@@ -55,132 +39,86 @@
       bottom: -80px; left: -70px;
     }
 
-    /* ── Screens ──────────────────────────────────────── */
+    /* ── Loading ── */
+    #loading {
+      position: fixed; inset: 0; z-index: 99;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px;
+    }
+    .spinner {
+      width: 44px; height: 44px;
+      border: 4px solid rgba(255,255,255,.15);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #loading p { color: rgba(255,255,255,.5); font-size: .88rem; }
+
+    /* ── Screens ── */
     .screen {
-      position: fixed;
-      inset: 0;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      position: fixed; inset: 0; z-index: 1;
+      display: flex; flex-direction: column; align-items: center;
       padding: 24px 20px 40px;
-      overflow-y: auto;
-      -webkit-overflow-scrolling: touch;
-      will-change: opacity, transform;
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
       transition: opacity .32s ease, transform .32s ease;
     }
-
     .screen.center { justify-content: center; }
+    .screen.is-hidden  { opacity: 0; pointer-events: none; transform: translateY(28px); }
+    .screen.is-leaving { opacity: 0; pointer-events: none; transform: translateY(-28px); }
 
-    .screen.is-hidden {
-      opacity: 0;
-      pointer-events: none;
-      transform: translateY(28px);
-    }
-
-    .screen.is-leaving {
-      opacity: 0;
-      transform: translateY(-28px);
-      pointer-events: none;
-    }
-
-    /* ── Branding ─────────────────────────────────────── */
-    .brand {
-      text-align: center;
-      margin-bottom: 28px;
-      flex-shrink: 0;
-    }
+    /* ── Brand ── */
+    .brand { text-align: center; margin-bottom: 26px; flex-shrink: 0; }
     .brand-icon { font-size: 3rem; display: block; margin-bottom: 6px; }
-    .brand h1 {
-      color: #fff;
-      font-size: 1.55rem;
-      font-weight: 800;
-      letter-spacing: .4px;
-    }
-    .brand p {
-      color: rgba(255,255,255,.55);
-      font-size: .85rem;
-      margin-top: 4px;
-    }
+    .brand h1 { color: #fff; font-size: 1.55rem; font-weight: 800; letter-spacing: .4px; }
+    .brand p  { color: rgba(255,255,255,.5); font-size: .85rem; margin-top: 4px; }
 
-    /* ── Card ─────────────────────────────────────────── */
+    /* ── Card ── */
     .card {
-      background: #fff;
-      border-radius: 24px;
-      padding: 28px 22px;
-      width: 100%;
-      max-width: 390px;
+      background: #fff; border-radius: 24px; padding: 26px 22px;
+      width: 100%; max-width: 390px;
       box-shadow: 0 24px 70px rgba(0,0,0,.45);
-      position: relative;
-      z-index: 1;
-      flex-shrink: 0;
+      position: relative; z-index: 1; flex-shrink: 0;
     }
 
-    /* ── Tabs ─────────────────────────────────────────── */
+    /* ── Tabs ── */
     .tabs {
-      display: flex;
-      background: #f0f0f6;
-      border-radius: 12px;
-      padding: 4px;
-      margin-bottom: 22px;
+      display: flex; background: #f0f0f6; border-radius: 12px;
+      padding: 4px; margin-bottom: 20px;
     }
     .tab-btn {
-      flex: 1;
-      padding: 10px 6px;
-      border: none;
-      background: none;
-      border-radius: 9px;
-      font-size: .9rem;
-      font-weight: 600;
-      color: #999;
-      cursor: pointer;
-      transition: background .22s, color .22s, box-shadow .22s;
+      flex: 1; padding: 10px 6px; border: none; background: none;
+      border-radius: 9px; font-size: .9rem; font-weight: 600; color: #999;
+      cursor: pointer; transition: background .22s, color .22s, box-shadow .22s;
     }
     .tab-btn.active {
-      background: #fff;
-      color: var(--primary);
+      background: #fff; color: var(--primary);
       box-shadow: 0 2px 10px rgba(0,0,0,.1);
     }
 
-    /* ── Form ─────────────────────────────────────────── */
+    /* ── Form ── */
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
 
     .form-alert {
-      background: #fff0f0;
-      border: 1px solid #ffcdd2;
-      border-radius: 10px;
-      padding: 10px 14px;
-      font-size: .83rem;
-      color: var(--danger);
-      margin-bottom: 16px;
-      text-align: center;
-      display: none;
+      background: #fff0f0; border: 1px solid #ffcdd2; border-radius: 10px;
+      padding: 10px 14px; font-size: .83rem; color: var(--danger);
+      margin-bottom: 14px; text-align: center; display: none;
     }
     .form-alert.show { display: block; }
 
-    .field { margin-bottom: 16px; }
+    .field { margin-bottom: 14px; }
     .field label {
-      display: block;
-      font-size: .78rem;
-      font-weight: 700;
-      color: #555;
-      margin-bottom: 6px;
-      letter-spacing: .3px;
-      text-transform: uppercase;
+      display: block; font-size: .78rem; font-weight: 700; color: #555;
+      margin-bottom: 6px; letter-spacing: .3px; text-transform: uppercase;
     }
     .input-wrap { position: relative; }
     .field input {
-      width: 100%;
-      padding: 13px 42px 13px 15px;
-      border: 1.5px solid #e4e4ee;
-      border-radius: 12px;
-      font-size: 1rem;
-      color: #1a1a2e;
-      background: #fafafe;
-      outline: none;
+      width: 100%; padding: 13px 42px 13px 15px;
+      border: 1.5px solid #e4e4ee; border-radius: 12px;
+      font-size: 1rem; color: #1a1a2e; background: #fafafe;
+      outline: none; -webkit-appearance: none;
       transition: border-color .2s, box-shadow .2s, background .2s;
-      -webkit-appearance: none;
     }
     .field input:focus {
       border-color: var(--primary);
@@ -188,263 +126,147 @@
       background: #fff;
     }
     .pw-eye {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-size: 1.05rem;
-      color: #aaa;
-      padding: 4px;
-      line-height: 1;
+      position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      font-size: 1.05rem; color: #aaa; padding: 4px; line-height: 1;
     }
-
     .btn-primary {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 13px;
+      width: 100%; padding: 15px; border: none; border-radius: 13px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-top: 6px;
-      letter-spacing: .35px;
+      color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer;
+      margin-top: 6px; letter-spacing: .35px;
       box-shadow: 0 6px 22px rgba(108,99,255,.38);
       transition: transform .1s, opacity .1s;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
     .btn-primary:active { transform: scale(.97); opacity: .9; }
+    .btn-primary:disabled { opacity: .55; cursor: default; }
+    .btn-spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,.35);
+      border-top-color: #fff; border-radius: 50%;
+      animation: spin .7s linear infinite;
+      display: none;
+    }
+    .btn-primary.loading .btn-spinner { display: block; }
+    .btn-primary.loading .btn-label  { display: none; }
 
-    /* ── How to Play screen ───────────────────────────── */
-    #screen-htp {
-      padding-top: 36px;
-      justify-content: flex-start;
-    }
-
-    .htp-header {
-      text-align: center;
-      margin-bottom: 22px;
-    }
-    .htp-header .greet {
-      color: rgba(255,255,255,.65);
-      font-size: .88rem;
-      margin-bottom: 5px;
-    }
+    /* ── How to Play screen ── */
+    #screen-htp { padding-top: 36px; justify-content: flex-start; }
+    .htp-header { text-align: center; margin-bottom: 20px; }
+    .htp-header .greet { color: rgba(255,255,255,.65); font-size: .88rem; margin-bottom: 5px; }
     .htp-header .greet strong { color: #fff; }
-    .htp-header h2 {
-      color: #fff;
-      font-size: 1.45rem;
-      font-weight: 800;
-    }
-    .htp-header p {
-      color: rgba(255,255,255,.5);
-      font-size: .82rem;
-      margin-top: 4px;
-    }
+    .htp-header h2 { color: #fff; font-size: 1.45rem; font-weight: 800; }
+    .htp-header p  { color: rgba(255,255,255,.5); font-size: .82rem; margin-top: 4px; }
 
-    .steps { display: flex; flex-direction: column; gap: 11px; margin-bottom: 22px; }
-
+    .steps { display: flex; flex-direction: column; gap: 11px; margin-bottom: 20px; }
     .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 13px;
-      padding: 14px 14px;
-      background: #f7f7ff;
-      border-radius: 14px;
-      border-left: 3.5px solid var(--primary);
-      opacity: 0;
-      transform: translateX(-14px);
+      display: flex; align-items: flex-start; gap: 13px;
+      padding: 13px 14px; background: #f7f7ff;
+      border-radius: 14px; border-left: 3.5px solid var(--primary);
+      opacity: 0; transform: translateX(-14px);
     }
-    .step.visible {
-      animation: stepIn .38s ease forwards;
-    }
+    .step.visible { animation: stepIn .38s ease forwards; }
     .step:nth-child(1) { animation-delay: .04s; }
     .step:nth-child(2) { animation-delay: .13s; }
     .step:nth-child(3) { animation-delay: .22s; }
     .step:nth-child(4) { animation-delay: .31s; }
     .step:nth-child(5) { animation-delay: .40s; }
+    @keyframes stepIn { to { opacity: 1; transform: translateX(0); } }
 
-    @keyframes stepIn {
-      to { opacity: 1; transform: translateX(0); }
-    }
-
-    .step-icon { font-size: 1.5rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+    .step-icon { font-size: 1.4rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
     .step-text strong { display: block; font-size: .9rem; color: #1a1a2e; margin-bottom: 2px; }
     .step-text span   { font-size: .8rem; color: #888; line-height: 1.45; }
 
     .btn-play {
-      width: 100%;
-      padding: 17px;
-      border: none;
-      border-radius: 14px;
+      width: 100%; padding: 17px; border: none; border-radius: 14px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      letter-spacing: .4px;
-      box-shadow: 0 6px 22px rgba(108,99,255,.42);
+      color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      letter-spacing: .4px; box-shadow: 0 6px 22px rgba(108,99,255,.42);
       transition: transform .1s;
     }
     .btn-play:active { transform: scale(.97); }
 
-    /* ── Game screen ──────────────────────────────────── */
-    #screen-game {
-      padding: 0 0 32px;
-      justify-content: flex-start;
-    }
+    /* ── Game screen ── */
+    #screen-game { padding: 0 0 32px; justify-content: flex-start; }
 
     .game-topbar {
-      width: 100%;
-      max-width: 420px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 18px 20px 14px;
-      flex-shrink: 0;
+      width: 100%; max-width: 420px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 20px 14px; flex-shrink: 0;
     }
-
     .user-chip {
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.15);
-      border-radius: 20px;
-      padding: 6px 13px 6px 7px;
-      backdrop-filter: blur(6px);
+      display: flex; align-items: center; gap: 9px;
+      background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px; padding: 6px 13px 6px 7px; backdrop-filter: blur(6px);
     }
     .avatar {
-      width: 30px; height: 30px;
-      border-radius: 50%;
+      width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      font-size: .75rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      color: #fff; font-size: .75rem; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
     }
-    .user-chip .uname {
-      color: #fff;
-      font-size: .85rem;
-      font-weight: 600;
-    }
+    .user-chip .uname { color: #fff; font-size: .85rem; font-weight: 600; }
 
     .topbar-actions { display: flex; gap: 8px; }
-
     .icon-btn {
-      width: 38px; height: 38px;
-      border-radius: 50%;
+      width: 38px; height: 38px; border-radius: 50%;
       border: 1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.1);
-      backdrop-filter: blur(6px);
-      color: rgba(255,255,255,.85);
-      font-size: .95rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: rgba(255,255,255,.1); backdrop-filter: blur(6px);
+      color: rgba(255,255,255,.85); font-size: .95rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       transition: background .18s;
     }
     .icon-btn:active { background: rgba(255,255,255,.22); }
 
     #screen-game .card {
-      max-width: 420px;
-      margin: 0 20px;
-      width: calc(100% - 40px);
+      max-width: 420px; margin: 0 20px; width: calc(100% - 40px);
     }
-
-    .range-hint {
-      text-align: center;
-      color: #999;
-      font-size: .88rem;
-      margin-bottom: 22px;
-    }
+    .range-hint { text-align: center; color: #999; font-size: .88rem; margin-bottom: 20px; }
     .range-hint strong { color: #444; }
 
-    /* Win banner */
     .win-banner { display: none; text-align: center; margin-bottom: 10px; }
     .win-banner.show { display: block; }
     .trophy {
-      font-size: 2.8rem;
-      display: inline-block;
+      font-size: 2.8rem; display: inline-block;
       animation: pop .42s cubic-bezier(.34,1.56,.64,1);
     }
-    @keyframes pop {
-      from { transform: scale(0); }
-      to   { transform: scale(1); }
-    }
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
 
-    /* Number selector */
     .number-selector {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 22px;
-      margin-bottom: 22px;
+      display: flex; align-items: center; justify-content: center;
+      gap: 22px; margin-bottom: 22px;
     }
     .adj-btn {
-      width: 68px; height: 68px;
-      border-radius: 50%;
-      border: none;
-      font-size: 2.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 68px; height: 68px; border-radius: 50%; border: none;
+      font-size: 2.1rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       transition: transform .08s;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: none;
+      user-select: none; -webkit-user-select: none; touch-action: none;
     }
     .adj-btn:active { transform: scale(.88); }
     .btn-minus { background: #ffe5e5; color: #e53935; box-shadow: 0 4px 14px rgba(229,57,53,.2); }
     .btn-plus  { background: #e8f5e9; color: #43a047; box-shadow: 0 4px 14px rgba(67,160,71,.2); }
 
     .num-display {
-      font-size: 4.6rem;
-      font-weight: 900;
-      color: #1a1a2e;
-      min-width: 108px;
-      text-align: center;
-      line-height: 1;
-      letter-spacing: -3px;
+      font-size: 4.6rem; font-weight: 900; color: #1a1a2e;
+      min-width: 108px; text-align: center; line-height: 1; letter-spacing: -3px;
     }
 
     .guess-btn {
-      width: 100%;
-      padding: 17px;
-      border: none;
-      border-radius: 13px;
+      width: 100%; padding: 17px; border: none; border-radius: 13px;
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-bottom: 14px;
-      transition: transform .1s;
+      color: #fff; font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      margin-bottom: 14px; transition: transform .1s;
       box-shadow: 0 6px 20px rgba(108,99,255,.4);
     }
     .guess-btn:active { transform: scale(.97); }
     .guess-btn:disabled { opacity: .42; box-shadow: none; cursor: default; }
 
     .feedback {
-      min-height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 12px;
-      padding: 12px 16px;
-      margin-bottom: 18px;
-      font-size: .95rem;
-      font-weight: 600;
-      text-align: center;
+      min-height: 60px; display: flex; align-items: center; justify-content: center;
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 18px;
+      font-size: .95rem; font-weight: 600; text-align: center;
       transition: background .28s, color .28s;
     }
     .feedback.empty  { background: #f5f5f7; color: #bbb; }
@@ -452,85 +274,57 @@
     .feedback.lower  { background: #e3f2fd; color: #0277bd; }
     .feedback.win    { background: #e8f5e9; color: #2e7d32; }
 
-    .game-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    .game-footer { display: flex; justify-content: space-between; align-items: center; }
     .attempts-label { color: #aaa; font-size: .84rem; }
     .attempts-label strong { color: #444; }
     .btn-newgame {
-      background: none;
-      border: 1.5px solid #e0e0e0;
-      border-radius: 9px;
-      padding: 7px 13px;
-      font-size: .83rem;
-      color: #777;
-      cursor: pointer;
-      transition: background .15s, border-color .15s;
+      background: none; border: 1.5px solid #e0e0e0; border-radius: 9px;
+      padding: 7px 13px; font-size: .83rem; color: #777; cursor: pointer;
+      transition: background .15s;
     }
     .btn-newgame:active { background: #f5f5f5; }
 
-    /* ── How-to-play modal (in-game) ──────────────────── */
+    /* ── Modal ── */
     .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      background: rgba(10,10,25,.65);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: flex-end;
-      justify-content: center;
-      padding: 16px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity .28s;
+      position: fixed; inset: 0; z-index: 50;
+      background: rgba(10,10,25,.65); backdrop-filter: blur(4px);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding: 16px; opacity: 0; pointer-events: none; transition: opacity .28s;
     }
-    .modal-backdrop.open {
-      opacity: 1;
-      pointer-events: all;
-    }
+    .modal-backdrop.open { opacity: 1; pointer-events: all; }
     .modal {
-      background: #fff;
-      border-radius: 24px;
-      padding: 24px 20px 28px;
-      width: 100%;
-      max-width: 420px;
+      background: #fff; border-radius: 24px; padding: 24px 20px 28px;
+      width: 100%; max-width: 420px;
       transform: translateY(36px);
       transition: transform .3s cubic-bezier(.34,1.2,.64,1);
     }
     .modal-backdrop.open .modal { transform: translateY(0); }
-
     .modal-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      display: flex; justify-content: space-between; align-items: center;
       margin-bottom: 18px;
     }
     .modal-head h3 { font-size: 1.05rem; font-weight: 800; color: #1a1a2e; }
     .btn-modal-close {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: none;
-      background: #f0f0f6;
-      color: #888;
-      font-size: 1rem;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%; border: none;
+      background: #f0f0f6; color: #888; font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
       transition: background .15s;
     }
     .btn-modal-close:active { background: #e4e4ee; }
-
     .modal .steps { margin-bottom: 0; }
     .modal .step  { animation: none !important; opacity: 1; transform: none; }
   </style>
 </head>
 <body>
 
-<!-- ═══ SCREEN: AUTH ════════════════════════════════════════ -->
-<div id="screen-auth" class="screen center">
+<!-- Loading -->
+<div id="loading">
+  <div class="spinner"></div>
+  <p>Carregando…</p>
+</div>
+
+<!-- ═══ AUTH ═══════════════════════════════════════════════ -->
+<div id="screen-auth" class="screen center is-hidden">
   <div class="brand">
     <span class="brand-icon">🔢</span>
     <h1>Adivinhe o Número</h1>
@@ -547,9 +341,9 @@
     <div id="panel-login" class="tab-panel active">
       <div id="login-alert" class="form-alert"></div>
       <div class="field">
-        <label>Usuário</label>
-        <input id="login-user" type="text" placeholder="Seu usuário"
-               autocomplete="username" autocapitalize="none" spellcheck="false">
+        <label>E-mail</label>
+        <input id="login-email" type="email" placeholder="seu@email.com"
+               autocomplete="email" autocapitalize="none" inputmode="email">
       </div>
       <div class="field">
         <label>Senha</label>
@@ -559,21 +353,29 @@
           <button class="pw-eye" data-for="login-pw" type="button">👁</button>
         </div>
       </div>
-      <button id="btn-login" class="btn-primary">Entrar</button>
+      <button id="btn-login" class="btn-primary">
+        <span class="btn-spinner"></span>
+        <span class="btn-label">Entrar</span>
+      </button>
     </div>
 
     <!-- Register -->
     <div id="panel-register" class="tab-panel">
       <div id="reg-alert" class="form-alert"></div>
       <div class="field">
-        <label>Usuário</label>
-        <input id="reg-user" type="text" placeholder="Escolha um usuário"
-               autocomplete="username" autocapitalize="none" spellcheck="false">
+        <label>Nome de usuário</label>
+        <input id="reg-name" type="text" placeholder="Como quer ser chamado"
+               autocomplete="nickname" autocapitalize="words" spellcheck="false">
+      </div>
+      <div class="field">
+        <label>E-mail</label>
+        <input id="reg-email" type="email" placeholder="seu@email.com"
+               autocomplete="email" autocapitalize="none" inputmode="email">
       </div>
       <div class="field">
         <label>Senha</label>
         <div class="input-wrap">
-          <input id="reg-pw" type="password" placeholder="Crie uma senha"
+          <input id="reg-pw" type="password" placeholder="Mínimo 6 caracteres"
                  autocomplete="new-password">
           <button class="pw-eye" data-for="reg-pw" type="button">👁</button>
         </div>
@@ -586,13 +388,16 @@
           <button class="pw-eye" data-for="reg-pw2" type="button">👁</button>
         </div>
       </div>
-      <button id="btn-register" class="btn-primary">Criar Conta</button>
+      <button id="btn-register" class="btn-primary">
+        <span class="btn-spinner"></span>
+        <span class="btn-label">Criar Conta</span>
+      </button>
     </div>
   </div>
 </div>
 
 
-<!-- ═══ SCREEN: HOW TO PLAY ═════════════════════════════════ -->
+<!-- ═══ HOW TO PLAY ════════════════════════════════════════ -->
 <div id="screen-htp" class="screen is-hidden">
   <div class="htp-header">
     <p class="greet">Olá, <strong id="htp-name"></strong>! 👋</p>
@@ -620,31 +425,30 @@
         <div class="step-icon">👆</div>
         <div class="step-text">
           <strong>Chute!</strong>
-          <span>Toque em <em>"Chutar!"</em> para verificar se você acertou.</span>
+          <span>Toque em "Chutar!" para verificar se você acertou.</span>
         </div>
       </div>
       <div class="step">
         <div class="step-icon">📈 📉</div>
         <div class="step-text">
           <strong>Siga as dicas</strong>
-          <span>Se errar, o jogo dirá se o número é maior ou menor que o seu palpite.</span>
+          <span>Se errar, o jogo dirá se o número secreto é maior ou menor.</span>
         </div>
       </div>
       <div class="step">
         <div class="step-icon">🏆</div>
         <div class="step-text">
           <strong>Ganhe!</strong>
-          <span>Acerte o número com o menor número de tentativas possível. Boa sorte!</span>
+          <span>Acerte o número com o menor número de tentativas. Boa sorte!</span>
         </div>
       </div>
     </div>
-
     <button id="btn-play" class="btn-play">Vamos Jogar! 🎮</button>
   </div>
 </div>
 
 
-<!-- ═══ SCREEN: GAME ════════════════════════════════════════ -->
+<!-- ═══ GAME ════════════════════════════════════════════════ -->
 <div id="screen-game" class="screen is-hidden">
   <div class="game-topbar">
     <div class="user-chip">
@@ -684,7 +488,7 @@
 </div>
 
 
-<!-- ═══ MODAL: HOW TO PLAY ══════════════════════════════════ -->
+<!-- ═══ MODAL HOW TO PLAY ═══════════════════════════════════ -->
 <div id="modal-htp" class="modal-backdrop">
   <div class="modal">
     <div class="modal-head">
@@ -702,22 +506,37 @@
 </div>
 
 
-<script>
-/* ─── Storage ──────────────────────────────────────────── */
-const store = {
-  users()        { return JSON.parse(localStorage.getItem('gn_users') || '{}'); },
-  saveUsers(u)   { localStorage.setItem('gn_users', JSON.stringify(u)); },
-  session()      { return sessionStorage.getItem('gn_session'); },
-  setSession(u)  { sessionStorage.setItem('gn_session', u); },
-  clearSession() { sessionStorage.removeItem('gn_session'); },
-};
+<script type="module">
+import { initializeApp }                              from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAnalytics }                               from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-analytics.js';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+  signOut,
+} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 
-/* ─── Screen transitions ───────────────────────────────── */
+/* ── Firebase init ────────────────────────────────────── */
+const app = initializeApp({
+  apiKey:            "AIzaSyAjj2maIrr0n-UeLoj2P0wiw7OIaTWPcOA",
+  authDomain:        "advinhe-o-numero.firebaseapp.com",
+  projectId:         "advinhe-o-numero",
+  storageBucket:     "advinhe-o-numero.firebasestorage.app",
+  messagingSenderId: "1091266744369",
+  appId:             "1:1091266744369:web:7ea88855c327fbc49c0510",
+  measurementId:     "G-NR4KB2PYXC",
+});
+getAnalytics(app);
+const auth = getAuth(app);
+
+/* ── Screen management ────────────────────────────────── */
 let currentScreen = null;
 
-function goTo(id, skipLeave = false) {
+function goTo(id, instant = false) {
   const next = document.getElementById(id);
-  if (currentScreen && !skipLeave) {
+  if (currentScreen && !instant) {
     const prev = currentScreen;
     prev.classList.add('is-leaving');
     setTimeout(() => prev.classList.add('is-hidden'), 320);
@@ -728,19 +547,38 @@ function goTo(id, skipLeave = false) {
   currentScreen = next;
 }
 
-/* ─── Auth: tabs ───────────────────────────────────────── */
+/* ── Auth state ───────────────────────────────────────── */
+let manualAuthPending = false; // true while login/register request is in-flight
+
+onAuthStateChanged(auth, user => {
+  document.getElementById('loading').style.display = 'none';
+
+  if (manualAuthPending) return; // manual handler will drive navigation
+
+  if (user) {
+    const name = user.displayName || user.email.split('@')[0];
+    loadGame(name);
+    goTo('screen-game', true);
+  } else {
+    currentScreen = document.getElementById('screen-auth');
+    document.getElementById('screen-auth').classList.remove('is-hidden');
+  }
+});
+
+/* ── Tabs ─────────────────────────────────────────────── */
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b === btn));
     document.querySelectorAll('.tab-panel').forEach(p =>
       p.classList.toggle('active', p.id === 'panel-' + btn.dataset.tab)
     );
-    document.getElementById('login-alert').classList.remove('show');
-    document.getElementById('reg-alert').classList.remove('show');
+    ['login-alert', 'reg-alert'].forEach(id =>
+      document.getElementById(id).classList.remove('show')
+    );
   });
 });
 
-/* ─── Auth: password toggle ────────────────────────────── */
+/* ── Password toggle ──────────────────────────────────── */
 document.querySelectorAll('.pw-eye').forEach(btn => {
   btn.addEventListener('click', () => {
     const inp = document.getElementById(btn.dataset.for);
@@ -749,65 +587,120 @@ document.querySelectorAll('.pw-eye').forEach(btn => {
   });
 });
 
-/* ─── Auth: helpers ────────────────────────────────────── */
-function alertMsg(id, msg) {
+/* ── Firebase error messages ──────────────────────────── */
+function fbError(code) {
+  const map = {
+    'auth/user-not-found':       'E-mail não encontrado.',
+    'auth/wrong-password':       'Senha incorreta.',
+    'auth/invalid-credential':   'E-mail ou senha incorretos.',
+    'auth/email-already-in-use': 'E-mail já está em uso.',
+    'auth/weak-password':        'Senha muito fraca (mínimo 6 caracteres).',
+    'auth/invalid-email':        'E-mail inválido.',
+    'auth/too-many-requests':    'Muitas tentativas. Tente novamente mais tarde.',
+    'auth/network-request-failed': 'Sem conexão. Verifique a internet.',
+  };
+  return map[code] || 'Erro inesperado. Tente novamente.';
+}
+
+function showAlert(id, msg) {
   const el = document.getElementById(id);
   el.textContent = msg;
   el.classList.add('show');
 }
 
-function afterAuth(username) {
-  store.setSession(username);
-  document.getElementById('htp-name').textContent = username;
+function setLoading(btn, on) {
+  btn.disabled = on;
+  btn.classList.toggle('loading', on);
+}
+
+/* ── After auth: show How to Play ─────────────────────── */
+function afterAuth(displayName) {
+  document.getElementById('htp-name').textContent = displayName;
   goTo('screen-htp');
-  // Trigger step animations
   setTimeout(() => {
     document.querySelectorAll('#htp-steps .step').forEach(s => s.classList.add('visible'));
   }, 60);
 }
 
-/* ─── Auth: login ──────────────────────────────────────── */
-document.getElementById('btn-login').addEventListener('click', () => {
-  const user = document.getElementById('login-user').value.trim();
-  const pw   = document.getElementById('login-pw').value;
-  if (!user || !pw) { alertMsg('login-alert', 'Preencha todos os campos.'); return; }
-  const users = store.users();
-  if (!users[user] || users[user] !== pw) { alertMsg('login-alert', 'Usuário ou senha incorretos.'); return; }
-  afterAuth(user);
+/* ── Login ────────────────────────────────────────────── */
+const btnLogin = document.getElementById('btn-login');
+btnLogin.addEventListener('click', async () => {
+  const email = document.getElementById('login-email').value.trim();
+  const pw    = document.getElementById('login-pw').value;
+
+  document.getElementById('login-alert').classList.remove('show');
+  if (!email || !pw) { showAlert('login-alert', 'Preencha todos os campos.'); return; }
+
+  manualAuthPending = true;
+  setLoading(btnLogin, true);
+  try {
+    const cred = await signInWithEmailAndPassword(auth, email, pw);
+    const name = cred.user.displayName || email.split('@')[0];
+    afterAuth(name);
+  } catch (err) {
+    showAlert('login-alert', fbError(err.code));
+    manualAuthPending = false;
+  } finally {
+    setLoading(btnLogin, false);
+  }
 });
 
-['login-user', 'login-pw'].forEach(id => {
+['login-email', 'login-pw'].forEach(id =>
   document.getElementById(id).addEventListener('keydown', e => {
-    if (e.key === 'Enter') document.getElementById('btn-login').click();
-  });
+    if (e.key === 'Enter') btnLogin.click();
+  })
+);
+
+/* ── Register ─────────────────────────────────────────── */
+const btnRegister = document.getElementById('btn-register');
+btnRegister.addEventListener('click', async () => {
+  const name  = document.getElementById('reg-name').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const pw    = document.getElementById('reg-pw').value;
+  const pw2   = document.getElementById('reg-pw2').value;
+
+  document.getElementById('reg-alert').classList.remove('show');
+
+  if (!name || !email || !pw || !pw2) { showAlert('reg-alert', 'Preencha todos os campos.'); return; }
+  if (name.length < 2)               { showAlert('reg-alert', 'Nome precisa ter ao menos 2 caracteres.'); return; }
+  if (pw !== pw2)                    { showAlert('reg-alert', 'As senhas não coincidem.'); return; }
+
+  manualAuthPending = true;
+  setLoading(btnRegister, true);
+  try {
+    const cred = await createUserWithEmailAndPassword(auth, email, pw);
+    await updateProfile(cred.user, { displayName: name });
+    afterAuth(name);
+  } catch (err) {
+    showAlert('reg-alert', fbError(err.code));
+    manualAuthPending = false;
+  } finally {
+    setLoading(btnRegister, false);
+  }
 });
 
-/* ─── Auth: register ───────────────────────────────────── */
-document.getElementById('btn-register').addEventListener('click', () => {
-  const user = document.getElementById('reg-user').value.trim();
-  const pw   = document.getElementById('reg-pw').value;
-  const pw2  = document.getElementById('reg-pw2').value;
-
-  if (!user || !pw || !pw2)    { alertMsg('reg-alert', 'Preencha todos os campos.'); return; }
-  if (user.length < 3)         { alertMsg('reg-alert', 'Usuário precisa ter ao menos 3 caracteres.'); return; }
-  if (pw.length < 4)           { alertMsg('reg-alert', 'Senha precisa ter ao menos 4 caracteres.'); return; }
-  if (pw !== pw2)              { alertMsg('reg-alert', 'As senhas não coincidem.'); return; }
-
-  const users = store.users();
-  if (users[user])             { alertMsg('reg-alert', 'Usuário já existe. Escolha outro.'); return; }
-
-  users[user] = pw;
-  store.saveUsers(users);
-  afterAuth(user);
-});
-
-/* ─── How to Play: play button ─────────────────────────── */
+/* ── How to Play → Game ───────────────────────────────── */
 document.getElementById('btn-play').addEventListener('click', () => {
-  initGame();
+  loadGame(auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || '?');
   goTo('screen-game');
 });
 
-/* ─── Game ─────────────────────────────────────────────── */
+/* ── Logout ───────────────────────────────────────────── */
+document.getElementById('btn-logout').addEventListener('click', async () => {
+  manualAuthPending = false;
+  await signOut(auth);
+  document.getElementById('login-email').value = '';
+  document.getElementById('login-pw').value    = '';
+  document.getElementById('login-alert').classList.remove('show');
+  goTo('screen-auth');
+  // restore auth screen visibility (onAuthStateChanged won't fire here since we navigated manually)
+  setTimeout(() => {
+    document.getElementById('screen-auth').classList.remove('is-hidden');
+    currentScreen = document.getElementById('screen-auth');
+  }, 20);
+});
+
+/* ── Game ─────────────────────────────────────────────── */
 let secret, current, attempts, won;
 
 const numDisplay    = document.getElementById('numDisplay');
@@ -816,21 +709,17 @@ const attemptsCount = document.getElementById('attemptsCount');
 const winBanner     = document.getElementById('winBanner');
 const guessBtn      = document.getElementById('guessBtn');
 
-function rand()    { return Math.floor(Math.random() * 100) + 1; }
-function clamp(n)  { return Math.min(100, Math.max(1, n)); }
+function rand()   { return Math.floor(Math.random() * 100) + 1; }
+function clamp(n) { return Math.min(100, Math.max(1, n)); }
 
-function initGame() {
-  const user = store.session();
-  document.getElementById('g-uname').textContent  = user;
-  document.getElementById('g-avatar').textContent = user.slice(0, 2).toUpperCase();
+function loadGame(name) {
+  document.getElementById('g-uname').textContent  = name;
+  document.getElementById('g-avatar').textContent = name.slice(0, 2).toUpperCase();
   resetGame();
 }
 
 function resetGame() {
-  secret   = rand();
-  current  = 50;
-  attempts = 0;
-  won      = false;
+  secret = rand(); current = 50; attempts = 0; won = false;
   numDisplay.textContent    = '50';
   feedbackEl.className      = 'feedback empty';
   feedbackEl.textContent    = 'Tente adivinhar o número!';
@@ -839,7 +728,6 @@ function resetGame() {
   guessBtn.disabled = false;
 }
 
-/* Hold-to-repeat buttons */
 function makeHoldBtn(btn, delta) {
   let t = null, iv = null;
   function tick() {
@@ -848,8 +736,7 @@ function makeHoldBtn(btn, delta) {
     numDisplay.textContent = current;
   }
   function start(e) {
-    e.preventDefault();
-    tick();
+    e.preventDefault(); tick();
     t = setTimeout(() => { iv = setInterval(tick, 75); }, 340);
   }
   function stop() { clearTimeout(t); clearInterval(iv); }
@@ -886,36 +773,11 @@ guessBtn.addEventListener('click', () => {
 
 document.getElementById('btn-newgame').addEventListener('click', resetGame);
 
-/* Logout */
-document.getElementById('btn-logout').addEventListener('click', () => {
-  store.clearSession();
-  document.getElementById('login-user').value = '';
-  document.getElementById('login-pw').value   = '';
-  document.getElementById('login-alert').classList.remove('show');
-  goTo('screen-auth');
-});
-
-/* Info modal */
+/* ── Modal ────────────────────────────────────────────── */
 const modalHtp = document.getElementById('modal-htp');
-
-document.getElementById('btn-info').addEventListener('click', () =>
-  modalHtp.classList.add('open')
-);
-document.getElementById('btn-modal-close').addEventListener('click', () =>
-  modalHtp.classList.remove('open')
-);
-modalHtp.addEventListener('click', e => {
-  if (e.target === modalHtp) modalHtp.classList.remove('open');
-});
-
-/* ─── Boot ─────────────────────────────────────────────── */
-const saved = store.session();
-if (saved) {
-  initGame();
-  goTo('screen-game', true);
-} else {
-  currentScreen = document.getElementById('screen-auth');
-}
+document.getElementById('btn-info').addEventListener('click', () => modalHtp.classList.add('open'));
+document.getElementById('btn-modal-close').addEventListener('click', () => modalHtp.classList.remove('open'));
+modalHtp.addEventListener('click', e => { if (e.target === modalHtp) modalHtp.classList.remove('open'); });
 </script>
 </body>
 </html>
